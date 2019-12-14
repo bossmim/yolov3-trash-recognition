@@ -70,7 +70,7 @@ def detect_video(model, args):
 
 
     colors = pkl.load(open("pallete", "rb"))
-    classes = load_classes("cfg/obj.names")
+    classes = load_classes("cfg_3c/obj.names")
 
     if args.webcam:
         cap = cv2.VideoCapture(0)
@@ -290,7 +290,7 @@ def main():
 
     print('Loading network...')
     model = Darknet("cfg/yolov3_3c.cfg")
-    model.load_weights('weights/yolov3_3c_5700.weights')
+    model.load_weights('weights/yolov3_3c_10000.weights')
     if args.cuda:
         model.cuda()
 
