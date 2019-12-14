@@ -26,7 +26,7 @@ pip install torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.
 
 ### Installing
 
-clone this model on your local machine
+Clone this model on your local machine
 
 ```
 git clone https://github.com/bossmim/yolov3-trash-recognition
@@ -42,7 +42,7 @@ pip install virtualenvwrapper-win
 ```
 mkvirtualenv myProject
 ```
-install all the requires packages
+Install all the requires packages
 ```
 pip install -r requirements.txt
 ```
@@ -56,13 +56,15 @@ link to google drive https://drive.google.com/drive/folders/1Uu8NVT-gO5o5yrfz60i
 
 ### test on image
 
-run detector.py and choose your input and output directory for example
+Run detector.py and choose your input and output directory for example
 
 ```
 python detector.py -i sample/sam1.jpg -o out
 ```
 
 ### test on video
+
+Recommend to run on gpu with CUDA installed
 
 ```
 python detector.py -i sampleVideo/vsam1.mp4 -v -o out
@@ -80,6 +82,6 @@ count| 3 | 10 | 9
 
 ## cratedit
 
-this project use yolov3 to train the model
+This project use yolov3 to train the model
 see more on https://pjreddie.com/darknet/yolo/
 
