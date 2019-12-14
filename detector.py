@@ -12,11 +12,10 @@ import os.path as osp
 import os
 import sys
 from datetime import datetime
-from tqdm import tqdm
 
 def load_classes(namesfile):
     fp = open(namesfile, "r")
-    names = fp.read().split("\n")
+    names = fp.read().split("\n")[:-1]
     return names
 
 def parse_args():
@@ -40,50 +39,34 @@ def create_batches(imgs, batch_size):
 
     return batches
 
-def draw_bbox(imgs, bbox, colors, classes,read_frames,output_path):
+def draw_bbox(imgs, bbox, colors, classes):
     img = imgs[int(bbox[0])]
-
     label = classes[int(bbox[-1])]
-
-    confidence = int(float(bbox[6])*100)
-
-    labelln = label+' '+str(confidence)+'%'
-
-    print(labelln)
-  
     p1 = tuple(bbox[1:3].int())
     p2 = tuple(bbox[3:5].int())
-
     color = colors[int(bbox[-1])]
-    cv2.rectangle(img, p1, p2, color, 4)
+    cv2.rectangle(img, p1, p2, color, 2)
     text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 1)[0]
     p3 = (p1[0], p1[1] - text_size[1] - 4)
     p4 = (p1[0] + text_size[0] + 4, p1[1])
     cv2.rectangle(img, p3, p4, color, -1)
-
     cv2.putText(img, label, p1, cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255], 1)
 
 def detect_video(model, args):
-    countbin = 0
-    countgar = 0
+
     input_size = [int(model.net_info['height']), int(model.net_info['width'])]
 
-
     colors = pkl.load(open("pallete", "rb"))
-    classes = load_classes("cfg_3c/obj.names")
-
+    classes = load_classes("cfg/obj.names")
+    colors = [colors[1]]
     if args.webcam:
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(int(args.input))
         output_path = osp.join(args.outdir, 'det_webcam.avi')
     else:
-
         cap = cv2.VideoCapture(args.input)
-        output_path = osp.join(args.outdir, args.input)
-        print(cap)
-        print(output_path)
+        output_path = osp.join(args.outdir, 'det_' + osp.basename(args.input).rsplit('.')[0] + '.avi')
 
     width, height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
     fps = cap.get(cv2.CAP_PROP_FPS)
 
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -95,40 +78,29 @@ def detect_video(model, args):
     while cap.isOpened():
         retflag, frame = cap.read()
         read_frames += 1
-        if read_frames>0:
-            if retflag:
-                frame_tensor = cv_image2tensor(frame, input_size).unsqueeze(0)
-                frame_tensor = Variable(frame_tensor)
+        if retflag:
+            frame_tensor = cv_image2tensor(frame, input_size).unsqueeze(0)
+            frame_tensor = Variable(frame_tensor)
 
-                if args.cuda:
-                    frame_tensor = frame_tensor.cuda()
+            if args.cuda:
+                frame_tensor = frame_tensor.cuda()
 
-                detections = model(frame_tensor, args.cuda).cpu()
-                detections = process_result(detections, args.obj_thresh, args.nms_thresh)
-                if len(detections) != 0:
-                    detections = transform_result(detections, [frame], input_size)
+            detections = model(frame_tensor, args.cuda).cpu()
+            detections = process_result(detections, args.obj_thresh, args.nms_thresh)
+            if len(detections) != 0:
+                detections = transform_result(detections, [frame], input_size)
+                for detection in detections:
+                    draw_bbox([frame], detection, colors, classes)
 
-                    for detection in detections:
-
-                        draw_bbox([frame], detection, colors, classes,read_frames,output_path)
-                        la = classes[int(detection[-1])]
-                        if la == 'bin':
-                            countbin = countbin +1
-                        if la == 'plastic_bag':
-                            countgar = countgar +1
-                    print("bin = " , countbin)
-                    print("plastic_bag = " , countgar)
-
-
-                if not args.no_show:
-                    cv2.imshow('frame', frame)
-                out.write(frame)
-                if read_frames % 30 == 0:
-                    print('Number of frames processed:', read_frames)
-                if not args.no_show and cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
-            else:
+            if not args.no_show:
+                cv2.imshow('frame', frame)
+            out.write(frame)
+            if read_frames % 30 == 0:
+                print('Number of frames processed:', read_frames)
+            if not args.no_show and cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+        else:
+            break
 
     end_time = datetime.now()
     print('Detection finished in %s' % (end_time - start_time))
@@ -147,6 +119,7 @@ def detect_image(model, args):
     countbin = 0
     countgar = 0
     counttrash = 0
+    a=[]
     print('Loading input image(s)...')
     input_size = [int(model.net_info['height']), int(model.net_info['width'])]
     batch_size = int(model.net_info['batch'])
@@ -165,8 +138,7 @@ def detect_image(model, args):
 
     start_time = datetime.now()
     print('Detecting...')
-
-    for batchi, img_batch in tqdm(enumerate(img_batches)):
+    for batchi, img_batch in enumerate(img_batches):
         img_tensors = [cv_image2tensor(img, input_size) for img in img_batch]
         img_tensors = torch.stack(img_tensors)
         img_tensors = Variable(img_tensors)
@@ -178,11 +150,9 @@ def detect_image(model, args):
             continue
 
         detections = transform_result(detections, img_batch, input_size)
-        print('detections = ', detections)
-        a=[]
         for detection in detections:
-            print("detection  : ", detection)
-            draw_bbox(img_batch, detection, colors, classes,0,args.outdir)
+            draw_bbox(img_batch, detection, colors, classes)
+
             la = classes[int(detection[-1])]
             if la == 'bin':
                 countbin = countbin +1
@@ -191,40 +161,24 @@ def detect_image(model, args):
             if (la == 'trash'):
                 counttrash = counttrash+1
             if (countgar >= 3 or counttrash >= 5):
-
- 
-                #print("detection -1 : ", int(detection[-1]))
-                #print("detection 0 : ", int(detection[0]))
-                #print("detection 1 : ", int(detection[1]))
                 p1 = tuple(detection[1:3].int())
                 p2 = tuple(detection[3:5].int())
-                #draw_biggar(img_batch, detection, colors, classes,0,args.outdir)
                 combined_array=np.append(p1, p2)
-                #print(combined_array)
-                print("---------------------------------------")
                 combined_list=combined_array.tolist()
-                #
-                #combined_array2=np.concatenate(combined_array,axis=0)
                 a.append(combined_list)
-                #print("list of rec:", a)
                 result=cv2.groupRectangles(a,1,0.85)
-                #print("combine rec: ", result)
                 for (x,y,w,h) in result[0]:
-                    #print(x)
-                    #print(y)
-                    #print(w)
-                    #print(h)
+  
                     img = img_batch[int(detection[0])]
-                    #cv2.rectangle(img,(x-50,y-50),(w+50,h+50),(0,0,255),2)
-                    #cv2.putText(img, "red area", (w+50,h+50), cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255], 1)
-                #combined_concatenate=np.concatenate(combined_array, axis=0)
-                #print(cv2.contourArea(detection))
+     
         print("---------Sum Amount-----------" )        
         print("bin = " , countbin)
         print("plastic_bag = " , countgar)
         print("counttrash = " , counttrash)
+
+
         for i, img in enumerate(img_batch):
-            save_path = osp.join(args.outdir, osp.basename(imlist[batchi*batch_size + i]))
+            save_path = osp.join(args.outdir, 'det_' + osp.basename(imlist[batchi*batch_size + i]))
             cv2.imwrite(save_path, img)
             print(save_path, 'saved')
 
@@ -233,64 +187,17 @@ def detect_image(model, args):
 
     return
 
-def is_intersect(self, other):
-    if self.min_x > other.max_x or self.max_x < other.min_x:
-        return False
-    if self.min_y > other.max_y or self.max_y < other.min_y:
-        return False
-    return True
-def draw_biggar(imgs, bbox, colors, classes,read_frames,output_path):
-    img = imgs[int(bbox[0])]
-
-    label = classes[int(bbox[-1])]
-
-    confidence = int(float(bbox[6])*100)
-
-    label = label+' '+str(confidence)+'%'
-
-    print(label)
-    
-
-    p1 = tuple(bbox[1:3].int())
-    p2 = tuple(bbox[3:5].int())
-
-
-    print("p1 :", bbox[1:3])
-    print("p2 :", bbox[3:5].int())
-    #print("cnts :", cnts)
-    color = colors[int(bbox[-1])]
-    cv2.rectangle(img, p1, p2, color, 3)
-
-    
-
-    #combined_list=combined_array.tolist()
-    #combined_concatenate=np.concatenate(combined_array, axis=axis)
-    
-    #print(combined_concatenate)
-    #result=cv2.groupRectangles(combined_list,1,0.85)
-    #for (x,y,w,h) in result[0]:
-        #cv2.rectangle(image,(x,y),(x+w,y+h),(0,0,255),2)
-    #x, y, w, h = cv2.boundingRect(cnts)
-    #cv2.rectangle(input, (x, y), (x + w - 1, y + h - 1), 20, 2)
-    #write text on top
-    #text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1, 1)[0]
-    #p3 = (p1[0], p1[1] - text_size[1] - 4)
-    #p4 = (p1[0] + text_size[0] + 4, p1[1])
-    #cv2.rectangle(img, p3, p4, color, -1)
-
-    cv2.putText(img, label, p2, cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255], 1)
-
 def main():
 
     args = parse_args()
-    
+
     if args.cuda and not torch.cuda.is_available():
         print("ERROR: cuda is not available, try running on CPU")
         sys.exit(1)
 
     print('Loading network...')
     model = Darknet("cfg/yolov3_3c.cfg")
-    model.load_weights('weights/yolov3_3c_5700.weights')
+    model.load_weights('weights/yolov3_3c_7400.weights')
     if args.cuda:
         model.cuda()
 
