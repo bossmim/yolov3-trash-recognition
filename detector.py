@@ -153,13 +153,13 @@ def detect_image(model, args):
         for detection in detections:
             draw_bbox(img_batch, detection, colors, classes)
 
-            la = classes[int(detection[-1])]
-            if la == 'bin':
-                countbin = countbin +1
-            if (la == 'plastic_bag' ):
-                countgar = countgar +1
-            if (la == 'trash'):
-                counttrash = counttrash+1
+            #la = classes[int(detection[-1])]
+            #if la == 'bin':
+                #countbin = countbin +1
+            #if (la == 'plastic_bag' ):
+                #countgar = countgar +1
+            #if (la == 'trash'):
+                #counttrash = counttrash+1
             if (countgar >= 3 or counttrash >= 5):
                 p1 = tuple(detection[1:3].int())
                 p2 = tuple(detection[3:5].int())
@@ -171,10 +171,10 @@ def detect_image(model, args):
   
                     img = img_batch[int(detection[0])]
      
-        print("---------Sum Amount-----------" )        
-        print("bin = " , countbin)
-        print("plastic_bag = " , countgar)
-        print("counttrash = " , counttrash)
+        #print("---------Sum Amount-----------" )        
+        #print("bin = " , countbin)
+        #print("plastic_bag = " , countgar)
+        #print("counttrash = " , counttrash)
 
 
         for i, img in enumerate(img_batch):
