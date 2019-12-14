@@ -48,7 +48,7 @@ pip install torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.
 
 download weights file on directory ./weights 
 
-link to google drive https://drive.google.com/drive/folders/1Uu8NVT-gO5o5yrfz60iacZhfWXY1J_dH?usp=sharing
+link to google drive https://drive.google.com/file/d/19fPCqVHgl850OrRJvEdIXKzE5FdCkz0R/view
 
 or using this command
 
