@@ -1,6 +1,6 @@
 # yolov3-trash-recognition
 
- image recognition technology for trash and bin (python on window) 
+ image recognition technology for trash and bin (python) 
 
 ## Getting Started :)
 
@@ -50,6 +50,11 @@ download weights file on directory ./weights
 
 link to google drive https://drive.google.com/drive/folders/1Uu8NVT-gO5o5yrfz60iacZhfWXY1J_dH?usp=sharing
 
+or using this command
+
+```
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=19fPCqVHgl850OrRJvEdIXKzE5FdCkz0R' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=19fPCqVHgl850OrRJvEdIXKzE5FdCkz0R" -O yolov3_3c_7400.weights && rm -rf /tmp/cookies.txt
+```
 
 ## Running the detection
 
