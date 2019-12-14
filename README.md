@@ -70,7 +70,7 @@ python detector.py -i sampleVideo/vsam1.mp4 -v -o out
 
 ## Result
 
-![GitHub Logo](/demo/sam1.jpg)
+![GitHub Logo](/demo/sam1.jpg) 
 
 type| bin | plastic_bag | trash
 --- | --- | --- | ---
