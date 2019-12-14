@@ -215,8 +215,8 @@ def detect_image(model, args):
                     #print(w)
                     #print(h)
                     img = img_batch[int(detection[0])]
-                    cv2.rectangle(img,(x-50,y-50),(w+50,h+50),(0,0,255),2)
-                    cv2.putText(img, "red area", (w+50,h+50), cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255], 1)
+                    #cv2.rectangle(img,(x-50,y-50),(w+50,h+50),(0,0,255),2)
+                    #cv2.putText(img, "red area", (w+50,h+50), cv2.FONT_HERSHEY_SIMPLEX, 1, [225, 255, 255], 1)
                 #combined_concatenate=np.concatenate(combined_array, axis=0)
                 #print(cv2.contourArea(detection))
         print("---------Sum Amount-----------" )        
@@ -290,7 +290,7 @@ def main():
 
     print('Loading network...')
     model = Darknet("cfg/yolov3_3c.cfg")
-    model.load_weights('weights/yolov3_3c_10000.weights')
+    model.load_weights('weights/yolov3_3c_5700.weights')
     if args.cuda:
         model.cuda()
 
