@@ -84,7 +84,7 @@ accuracy(avg) | 99% | 98% | 99%
 count| 3 | 10 | 9
 
 
-## cratedit
+## credit
 
 This project use yolov3 to train the model
 see more on https://pjreddie.com/darknet/yolo/
