@@ -10,20 +10,16 @@ This project use an implementation from https://github.com/zhaoyanglijoey/yolov3
 
 ### Requirement
 
- python 3.5
+python 3.7 or Anaconda3
 
- Pytorch 0.4 (see the installation below)
-
-OSX 
-```
-pip install torch==1.2.0 torchvision==0.4.0
-```
-Linux and Windows
+### (optional) create python virtual environment
 
 ```
-pip install torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+pip install virtualenvwrapper-win
 ```
-
+```
+mkvirtualenv myProject
+```
 ### Installing
 
 Clone this model on your local machine
@@ -34,17 +30,20 @@ git clone https://github.com/bossmim/yolov3-trash-recognition
 ```
 cd yolov3-trash-recognition
 ```
-
-(optional) create python virtual environment
-```
-pip install virtualenvwrapper-win
-```
-```
-mkvirtualenv myProject
-```
 Install all the requires packages
 ```
 pip install -r requirements.txt
+```
+Install Pytorch 0.4
+
+OSX 
+```
+pip install torch==1.2.0 torchvision==0.4.0
+```
+Linux and Windows
+
+```
+pip install torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 ```
 
 download weights file on directory ./weights 
