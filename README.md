@@ -83,6 +83,9 @@ type| bin | plastic_bag | trash
 accuracy(avg) | 99% | 98% | 99%
 count| 3 | 10 | 9
 
+## Let see our model accuracy 
+
+![GitHub Logo](/error/detection-results-info.png)
 
 ## credit
 
