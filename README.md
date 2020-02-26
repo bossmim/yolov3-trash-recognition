@@ -84,21 +84,21 @@ accuracy(avg) | 99% | 98% | 99%
 count| 3 | 10 | 9
 
 ## Let see our model accuracy 
-from the result, the accuracy of trash class is quite low, this is beacuse we use too small particle on the training process so the model cannot different between the actual trash and the reflection of light or the small rock. these can be solve by useing the bigger dataset or using a clear shape of images
+From the result, the accuracy of trash class is quite low, this is beacuse we use too small particle on the training process so the model cannot different between the actual trash and the reflection of light or the small rock. these can be solve by useing the bigger dataset or using a clear shape of images
 
-next is plastic bag class, the accuracy is quite acceptable, aalthough the accuracy is not high but the measurement of true positive is much higher than false positive which means that it has a high chance to detect correctly. The model can be improve by training more kinds of plastic bag images.
+Next is plastic bag class, the accuracy is quite acceptable, aalthough the accuracy is not high but the measurement of true positive is much higher than false positive which means that it has a high chance to detect correctly. The model can be improve by training more kinds of plastic bag images.
 
-last is bin class, which has the highest accuracy because it has the most clearly shape which can easily be identify by the model(CNNs)
+Last is bin class, which has the highest accuracy because it has the most clearly shape which can easily be identify by the model(CNNs)
 
-Detection result graph
+###Detection result graph
 ![GitHub Logo](/error/detection-results-info.png)
-Average Precision graph
+###Average Precision graph
 ![GitHub Logo](/error/mAP.png)
-Precision-Recall graph of bin class
+###Precision-Recall graph of bin class
 ![GitHub Logo](/error/bin.png)
-Precision-Recall graph of plastic_bag class
+###Precision-Recall graph of plastic_bag class
 ![GitHub Logo](/error/plastic_bag.png)
-Precision-Recall graph of trash class
+###Precision-Recall graph of trash class
 ![GitHub Logo](/error/trash.png)
 
 ## credit
