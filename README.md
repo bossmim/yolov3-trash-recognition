@@ -90,15 +90,15 @@ Next is plastic bag class, the accuracy is quite acceptable, aalthough the accur
 
 Last is bin class, which has the highest accuracy because it has the most clearly shape which can easily be identify by the model(CNNs)
 
-###Detection result graph
+### Detection result graph
 ![GitHub Logo](/error/detection-results-info.png)
-###Average Precision graph
+### Average Precision graph
 ![GitHub Logo](/error/mAP.png)
-###Precision-Recall graph of bin class
+### Precision-Recall graph of bin class
 ![GitHub Logo](/error/bin.png)
-###Precision-Recall graph of plastic_bag class
+### Precision-Recall graph of plastic_bag class
 ![GitHub Logo](/error/plastic_bag.png)
-###Precision-Recall graph of trash class
+### Precision-Recall graph of trash class
 ![GitHub Logo](/error/trash.png)
 
 ## credit
